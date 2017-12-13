@@ -17,7 +17,7 @@ boolean wifiConnected = false;
 unsigned long PreviousMillis = 0;
 const long Interval = 1000; //czas zalaczenia przekaznika otwierania
 
-// Callback od esp-linka, który pilnuje zmian stanu wifi s
+// Callback od esp-linka, który pilnuje zmian stanu wifi 
 // Wypisuje trochę debugu i ustawia globalną flagę
 void wifiCb(void *response) {
   ELClientResponse *res = (ELClientResponse*)response;
@@ -80,30 +80,20 @@ pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
   esp.wifiCb.attach(wifiCb); // callback zmian stanu wifi, opcjonalne (wywalić, jeśli niepotrzebne)
   bool ok;
   do {
-    ok = esp.Sync();      // sync up with esp-link, blocks for up to 2 seconds
+    ok = esp.Sync();      // synchronizuje esp-link, blokuje system na 2 sek.
     if (!ok) Serial.println("EL-Client sync failed!");
   } while(!ok);
   Serial.println("EL-Client synced!");
 
-  // Get immediate wifi status info for demo purposes. This is not normally used because the
-  // wifi status callback registered above gets called immediately. 
- /* esp.GetWifiStatus();
-  ELClientPacket *packet;
-  if ((packet=esp.WaitReturn()) != NULL) {
-    Serial.print("Wifi status: ");
-    Serial.println(packet->value);
-  }*/
-
 URLHandler *ledHandler = webServer.createURLHandler(F("/Sterowanie.html.json"));
-//ledHandler->loadCb.attach(&ledPageLoadAndRefreshCb);
-//ledHandler->refreshCb.attach(&ledPageLoadAndRefreshCb);
 ledHandler->buttonCb.attach(&ledButtonPressCb);
 
 esp.resetCb = resetCb;
 resetCb();
 
-  // Set up the REST client to talk to www.timeapi.org, this doesn't connect to that server,
-  // it just sets-up stuff on the esp-link side
+  // Ustawia klienta REST'a, żeby gadał z 192.168.1.61 na porcie 8080. 
+  //Nie łączy się z nim jeszcze, ale zapamiętuje dane po stronie esp-linka
+  
   int err = rest.begin("192.168.1.55", 8080);
   if (err != 0) {
     Serial.print("REST begin failed: ");
@@ -116,7 +106,7 @@ resetCb();
 #define BUFLEN 266
 
 void loop() {
-  // process any callbacks coming from esp_link
+  // przetwarza wszystkie callbacki od esp-linka
   esp.Process();
 
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
@@ -141,7 +131,7 @@ if (digitalRead(A0) == LOW){
 //sprawdzam krancowke od zamykania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A1) == LOW){
   if(wifiConnected) {
-    // Request /utc/now from the previously set-up server
+    // pobiera metodą GET odpowiedź na zapytanie json z wcześniej ustawionego serwera 
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=Off");
     Serial.print("Wysłałem zapytanie json");
     char response[BUFLEN];
