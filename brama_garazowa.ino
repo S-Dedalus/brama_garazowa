@@ -15,7 +15,7 @@ ELClientWebServer webServer(&esp);
 
 boolean wifiConnected = false;
 unsigned long PreviousMillis = 0;
-const long Interval = 500; //czas zalaczenia przekaznika otwierania
+const long Interval = 1000; //czas zalaczenia przekaznika otwierania
 
 // Callback made from esp-link to notify of wifi status changes
 // Here we print something out and set a global flag
@@ -41,6 +41,7 @@ void ledButtonPressCb(char * btnId) //tutaj potrzeba tylko jednego przycisku!!!!
   String id = btnId;
   if( id == F("btn_on") )
     digitalWrite(A2, HIGH);
+    Serial.println("Wcisnieto przycisk zamykania/otwierania bramy");
     unsigned long CurrentMillis = millis();
     if (CurrentMillis - PreviousMillis >= Interval) {
       digitalWrite(A2, LOW);
@@ -89,7 +90,7 @@ pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
     Serial.println(packet->value);
   }*/
 
-URLHandler *ledHandler = webServer.createURLHandler(F("/SimpleLED.html.json"));
+URLHandler *ledHandler = webServer.createURLHandler(F("/Sterowanie.html.json"));
 //ledHandler->loadCb.attach(&ledPageLoadAndRefreshCb);
 //ledHandler->refreshCb.attach(&ledPageLoadAndRefreshCb);
 ledHandler->buttonCb.attach(&ledButtonPressCb);
@@ -133,7 +134,7 @@ if (digitalRead(A0) == LOW){
 }
 
 //sprawdzam krancowke od zamykania i zmieniam stan przelacznika w Domoticzu
-if (digitalRead(A0) == LOW){
+if (digitalRead(A1) == LOW){
   if(wifiConnected) {
     // Request /utc/now from the previously set-up server
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=Off");
