@@ -19,7 +19,7 @@ const long Interval = 1000; //czas zalaczenia przekaznika otwierania
 
 // Callback od esp-linka, który pilnuje zmian stanu wifi s
 // Wypisuje trochę debugu i ustawia globalną flagę
-/*void wifiCb(void *response) {
+void wifiCb(void *response) {
   ELClientResponse *res = (ELClientResponse*)response;
   if (res->argc() == 1) {
     uint8_t status;
@@ -34,7 +34,7 @@ const long Interval = 1000; //czas zalaczenia przekaznika otwierania
       wifiConnected = false;
     }
   }
-}*/
+}
 
 
 //Definiuje zachowanie uC po otrzymaniu informacji, że wciśnięto 
@@ -77,7 +77,7 @@ pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
   //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
   //tuz po tym jak Sync() zakończy działanie. 
   
-//  esp.wifiCb.attach(wifiCb); // callback zmian stanu wifi, opcjonalne (wywalić, jeśli niepotrzebne)
+  esp.wifiCb.attach(wifiCb); // callback zmian stanu wifi, opcjonalne (wywalić, jeśli niepotrzebne)
   bool ok;
   do {
     ok = esp.Sync();      // sync up with esp-link, blocks for up to 2 seconds
