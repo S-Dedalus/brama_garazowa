@@ -122,8 +122,9 @@ void loop() {
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A0) == LOW){
   if(wifiConnected) {
-    // Request /utc/now from the previously set-up server
+    // Wysyłanie żądania do domoticza
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=On");
+    Serial.print("Wysłałem zapytanie json");
     char response[BUFLEN];
     memset(response, 0, BUFLEN);
     uint16_t code = rest.waitResponse(response, BUFLEN);
@@ -142,6 +143,7 @@ if (digitalRead(A1) == LOW){
   if(wifiConnected) {
     // Request /utc/now from the previously set-up server
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=Off");
+    Serial.print("Wysłałem zapytanie json");
     char response[BUFLEN];
     memset(response, 0, BUFLEN);
     uint16_t code = rest.waitResponse(response, BUFLEN);
