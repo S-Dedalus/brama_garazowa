@@ -3,23 +3,23 @@
 #include <ELClientWebServer.h>
 
 
-
-// Initialize a connection to esp-link using the normal hardware serial port both for
-// SLIP and for debug messages.
+//Nawiązuje połączenie z esp-link za pośrednictwem portu szeregowego dla protokołu SLIP 
+//i danych debugowaniw
 ELClient esp(&Serial, &Serial);
 
-// Initialize a REST client on the connection to esp-link
+// Uruchamianie klienta REST dla połączenia uC<->esp
 ELClientRest rest(&esp);
 
+//Uruchamia webserwer
 ELClientWebServer webServer(&esp);
 
 boolean wifiConnected = false;
 unsigned long PreviousMillis = 0;
 const long Interval = 1000; //czas zalaczenia przekaznika otwierania
 
-// Callback made from esp-link to notify of wifi status changes
-// Here we print something out and set a global flag
-void wifiCb(void *response) {
+// Callback od esp-linka, który pilnuje zmian stanu wifi s
+// Wypisuje trochę debugu i ustawia globalną flagę
+/*void wifiCb(void *response) {
   ELClientResponse *res = (ELClientResponse*)response;
   if (res->argc() == 1) {
     uint8_t status;
@@ -34,9 +34,12 @@ void wifiCb(void *response) {
       wifiConnected = false;
     }
   }
-}
+}*/
 
-void ledButtonPressCb(char * btnId) //tutaj potrzeba tylko jednego przycisku!!!!!!!!!!!
+
+//Definiuje zachowanie uC po otrzymaniu informacji, że wciśnięto 
+//przycisk
+void ledButtonPressCb(char * btnId) 
 {
   String id = btnId;
   if( id == F("btn_on") )
@@ -53,7 +56,7 @@ void resetCb(void) {
   Serial.println("EL-Client (re-)starting!");
   bool ok = false;
   do {
-    ok = esp.Sync();      // sync up with esp-link, blocks for up to 2 seconds
+    ok = esp.Sync();      // synchronizuje się z esp-linkiem, blokuje na ponad 2 sekundy
     if (!ok) Serial.println("EL-Client sync failed!");
   } while(!ok);
   Serial.println("EL-Client synced!");
@@ -63,17 +66,18 @@ void resetCb(void) {
 
 
 void setup() {
-  Serial.begin(9600);   // the baud rate here needs to match the esp-link config
+  Serial.begin(9600);   
   Serial.println("EL-Client starting!");
 
 pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
 
-  // Sync-up with esp-link, this is required at the start of any sketch and initializes the
-  // callbacks to the wifi status change callback. The callback gets called with the initial
-  // status right after Sync() below completes.
-  esp.wifiCb.attach(wifiCb); // wifi status change callback, optional (delete if not desired)
+  //Synchronizuje z esp-link. Jest wymagana na początku każdego skeczu. Inicjalizuje 
+  //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
+  //tuz po tym jak Sync() zakończy działanie. 
+  
+//  esp.wifiCb.attach(wifiCb); // callback zmian stanu wifi, opcjonalne (wywalić, jeśli niepotrzebne)
   bool ok;
   do {
     ok = esp.Sync();      // sync up with esp-link, blocks for up to 2 seconds
