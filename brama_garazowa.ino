@@ -14,9 +14,6 @@ ELClientRest rest(&esp);
 ELClientWebServer webServer(&esp);
 
 boolean wifiConnected = false;
-unsigned long PreviousMillis = 0;
-unsigned long CurrentMillis = 0;
-const long Interval = 2000; //czas zalaczenia przekaznika otwierania
 
 // Callback od esp-linka, który pilnuje zmian stanu wifi 
 // Wypisuje trochę debugu i ustawia globalną flagę
