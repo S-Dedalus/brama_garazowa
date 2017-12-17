@@ -15,7 +15,8 @@ ELClientWebServer webServer(&esp);
 
 boolean wifiConnected = false;
 unsigned long PreviousMillis = 0;
-const long Interval = 2500; //czas zalaczenia przekaznika otwierania
+unsigned long CurrentMillis = 0;
+const long Interval = 2000; //czas zalaczenia przekaznika otwierania
 
 // Callback od esp-linka, który pilnuje zmian stanu wifi 
 // Wypisuje trochę debugu i ustawia globalną flagę
@@ -45,11 +46,25 @@ void ledButtonPressCb(char * btnId)
   if( id == F("btn_on") )
     digitalWrite(A2, HIGH);
     Serial.println("Wcisnieto przycisk zamykania/otwierania bramy");
-    unsigned long CurrentMillis = millis();
-    if (CurrentMillis - PreviousMillis >= Interval) {
+    delay(1000);
+/*      label:
+      CurrentMillis = millis();
+      Serial.print("roznica przed if = ");
+      Serial.println(CurrentMillis - PreviousMillis);
+      Serial.println(CurrentMillis);
+      Serial.println(PreviousMillis);
+    if (CurrentMillis - PreviousMillis < Interval) {
+//      CurrentMillis = millis();
+      goto label;
+      }
+    else {
       digitalWrite(A2, LOW);
-    }
+      Serial.print("roznica = ");
+      Serial.print(CurrentMillis - PreviousMillis);
+      PreviousMillis = CurrentMillis;
+    }*/
 }
+
 
 
 void resetCb(void) {
@@ -106,8 +121,16 @@ resetCb();
 #define BUFLEN 266
 
 void loop() {
+/*Serial.print ("Poczatek peti - Wartosc Previous= ");
+Serial.print (PreviousMillis);
+Serial.print ("Wartosc CurrentMilis ="); 
+Serial.print (CurrentMillis);*/
   // przetwarza wszystkie callbacki od esp-linka
-  esp.Process();
+esp.Process();
+/*Serial.print ("Po esp.Process() - Wartosc Previous= ");
+Serial.print (PreviousMillis);
+Serial.print ("Wartosc CurrentMilis ="); 
+Serial.print (CurrentMillis);*/
 
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A0) == LOW){
@@ -146,5 +169,9 @@ if (digitalRead(A1) == LOW){
     }
   }
 }
+/*Serial.print ("Koniec petli - Wartosc Previous= ");
+Serial.print (PreviousMillis);
+Serial.print ("Wartosc CurrentMilis ="); 
+Serial.print (CurrentMillis);*/
 }
 
