@@ -44,10 +44,10 @@ void ledButtonPressCb(char * btnId)
 {
   String id = btnId;
   if( id == F("btn_on") )
-    digitalWrite(A2, HIGH);
+    digitalWrite(A2, LOW);
     Serial.println("Wcisnieto przycisk zamykania/otwierania bramy");
     delay(1000);
-    digitalWrite(A2, LOW);
+    digitalWrite(A2, HIGH);
 }
 
 void resetCb(void) {
@@ -70,7 +70,7 @@ void setup() {
 pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
-digitalWrite(A2, LOW);
+digitalWrite(A2, HIGH);
 
   //Synchronizuje z esp-link. Jest wymagana na początku każdego skeczu. Inicjalizuje 
   //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
@@ -105,16 +105,9 @@ resetCb();
 #define BUFLEN 266
 
 void loop() {
-/*Serial.print ("Poczatek peti - Wartosc Previous= ");
-Serial.print (PreviousMillis);
-Serial.print ("Wartosc CurrentMilis ="); 
-Serial.print (CurrentMillis);*/
-  // przetwarza wszystkie callbacki od esp-linka
+
+// przetwarza wszystkie callbacki od esp-linka
 esp.Process();
-/*Serial.print ("Po esp.Process() - Wartosc Previous= ");
-Serial.print (PreviousMillis);
-Serial.print ("Wartosc CurrentMilis ="); 
-Serial.print (CurrentMillis);*/
 
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A0) == LOW){
@@ -153,9 +146,5 @@ if (digitalRead(A1) == LOW){
     }
   }
 }
-/*Serial.print ("Koniec petli - Wartosc Previous= ");
-Serial.print (PreviousMillis);
-Serial.print ("Wartosc CurrentMilis ="); 
-Serial.print (CurrentMillis);*/
 }
 
