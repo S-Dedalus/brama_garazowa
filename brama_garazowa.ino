@@ -47,25 +47,8 @@ void ledButtonPressCb(char * btnId)
     digitalWrite(A2, HIGH);
     Serial.println("Wcisnieto przycisk zamykania/otwierania bramy");
     delay(1000);
-/*      label:
-      CurrentMillis = millis();
-      Serial.print("roznica przed if = ");
-      Serial.println(CurrentMillis - PreviousMillis);
-      Serial.println(CurrentMillis);
-      Serial.println(PreviousMillis);
-    if (CurrentMillis - PreviousMillis < Interval) {
-//      CurrentMillis = millis();
-      goto label;
-      }
-    else {
-      digitalWrite(A2, LOW);
-      Serial.print("roznica = ");
-      Serial.print(CurrentMillis - PreviousMillis);
-      PreviousMillis = CurrentMillis;
-    }*/
+    digitalWrite(A2, LOW);
 }
-
-
 
 void resetCb(void) {
   Serial.println("EL-Client (re-)starting!");
@@ -87,6 +70,7 @@ void setup() {
 pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
+digitalWrite(A2, LOW);
 
   //Synchronizuje z esp-link. Jest wymagana na początku każdego skeczu. Inicjalizuje 
   //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
