@@ -68,7 +68,7 @@ void setup() {
 pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
-digitalWrite(A2, HIGH);
+digitalWrite(A2, LOW);
 
 
 
@@ -93,7 +93,7 @@ resetCb();
   // Ustawia klienta REST'a, żeby gadał z 192.168.1.61 na porcie 8080. 
   //Nie łączy się z nim jeszcze, ale zapamiętuje dane po stronie esp-linka
   
-  int err = rest.begin("192.168.1.55", 8080);
+  int err = rest.begin("192.168.1.54", 8080);
   if (err != 0) {
     Serial.print("REST begin failed: ");
     Serial.println(err);
