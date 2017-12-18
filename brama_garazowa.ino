@@ -64,8 +64,8 @@ void setup() {
   Serial.begin(9600);   
   Serial.println("EL-Client starting!");
 
-pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
-pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
+pinMode(A0, INPUT); //krancowka otwarcia
+pinMode(A1, INPUT); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
 digitalWrite(A2, HIGH);
 
