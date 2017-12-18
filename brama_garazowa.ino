@@ -108,7 +108,12 @@ void loop() {
 
 // przetwarza wszystkie callbacki od esp-linka
 esp.Process();
-
+int x = digitalRead (A0);
+int y = digitalRead (A1); 
+Serial.print("Stan wejscia A0: ");
+Serial.println(x);
+Serial.print("Stan wejscia A1: ");
+Serial.println(y);
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A1) == HIGH && otwarte == false){
   if(wifiConnected) {
