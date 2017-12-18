@@ -68,7 +68,7 @@ void setup() {
 pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
-digitalWrite(A2, LOW);
+digitalWrite(A2, HIGH);
 
 
 
@@ -108,12 +108,12 @@ void loop() {
 
 // przetwarza wszystkie callbacki od esp-linka
 esp.Process();
-int x = digitalRead (A0);
+/*int x = digitalRead (A0);
 int y = digitalRead (A1); 
 Serial.print("Stan wejscia A0: ");
 Serial.println(x);
 Serial.print("Stan wejscia A1: ");
-Serial.println(y);
+Serial.println(y);*/
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A1) == HIGH && otwarte == false){
   if(wifiConnected) {
