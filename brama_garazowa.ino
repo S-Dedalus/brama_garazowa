@@ -120,7 +120,7 @@ if (digitalRead(A1) == HIGH && otwarte == false){
     uint16_t code = rest.waitResponse(response, BUFLEN);
     otwarte = true;
     if(code == HTTP_STATUS_OK){
-      Serial.println("Odpowiedz na zapytanie json do Domoticza: ");
+      Serial.println("Odpowiedz na zapytanie json do Domoticza: OTWARTE");
       Serial.println(response);
     } else {
       Serial.print("Nie wykonano zapytania GET: ");
@@ -140,7 +140,7 @@ if (digitalRead(A0) == HIGH && otwarte == true){
     uint16_t code = rest.waitResponse(response, BUFLEN);
     otwarte = false;
     if(code == HTTP_STATUS_OK){
-      Serial.println("Odpowiedz na zapytanie json do Domoticza: ");
+      Serial.println("Odpowiedz na zapytanie json do Domoticza: ZAMKNIETE");
       Serial.println(response);
     } else {
       Serial.print("Nie wykonano zapytania GET: ");
