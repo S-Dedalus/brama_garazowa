@@ -110,7 +110,7 @@ void loop() {
 esp.Process();
 
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
-if (digitalRead(A0) == LOW && otwarte == false){
+if (digitalRead(A1) == HIGH && otwarte == false){
   if(wifiConnected) {
     // Wysyłanie żądania do domoticza
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=On");
@@ -130,7 +130,7 @@ if (digitalRead(A0) == LOW && otwarte == false){
 }
 
 //sprawdzam krancowke od zamykania i zmieniam stan przelacznika w Domoticzu
-if (digitalRead(A1) == LOW && otwarte == true){
+if (digitalRead(A0) == HIGH && otwarte == true){
   if(wifiConnected) {
     // pobiera metodą GET odpowiedź na zapytanie json z wcześniej ustawionego serwera 
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=Off");
@@ -138,6 +138,7 @@ if (digitalRead(A1) == LOW && otwarte == true){
     char response[BUFLEN];
     memset(response, 0, BUFLEN);
     uint16_t code = rest.waitResponse(response, BUFLEN);
+    otwarte = false;
     if(code == HTTP_STATUS_OK){
       Serial.println("Odpowiedz na zapytanie json do Domoticza: ");
       Serial.println(response);
