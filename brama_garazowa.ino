@@ -14,6 +14,7 @@ ELClientRest rest(&esp);
 ELClientWebServer webServer(&esp);
 
 boolean wifiConnected = false;
+boolean otwarte = false;
 
 // Callback od esp-linka, który pilnuje zmian stanu wifi 
 // Wypisuje trochę debugu i ustawia globalną flagę
@@ -64,10 +65,12 @@ void setup() {
   Serial.begin(9600);   
   Serial.println("EL-Client starting!");
 
-pinMode(A0, INPUT); //krancowka otwarcia
-pinMode(A1, INPUT); //krancowka zamkniecia
+pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
+pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
 digitalWrite(A2, HIGH);
+
+
 
   //Synchronizuje z esp-link. Jest wymagana na początku każdego skeczu. Inicjalizuje 
   //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
@@ -107,7 +110,7 @@ void loop() {
 esp.Process();
 
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
-if (digitalRead(A0) == LOW){
+if (digitalRead(A0) == LOW && otwarte == false){
   if(wifiConnected) {
     // Wysyłanie żądania do domoticza
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=On");
@@ -115,6 +118,7 @@ if (digitalRead(A0) == LOW){
     char response[BUFLEN];
     memset(response, 0, BUFLEN);
     uint16_t code = rest.waitResponse(response, BUFLEN);
+    otwarte = true;
     if(code == HTTP_STATUS_OK){
       Serial.println("Odpowiedz na zapytanie json do Domoticza: ");
       Serial.println(response);
@@ -126,7 +130,7 @@ if (digitalRead(A0) == LOW){
 }
 
 //sprawdzam krancowke od zamykania i zmieniam stan przelacznika w Domoticzu
-if (digitalRead(A1) == LOW){
+if (digitalRead(A1) == LOW && otwarte == true){
   if(wifiConnected) {
     // pobiera metodą GET odpowiedź na zapytanie json z wcześniej ustawionego serwera 
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=Off");
