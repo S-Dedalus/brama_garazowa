@@ -19,6 +19,7 @@ boolean otwarte = false;
 // Callback od esp-linka, który pilnuje zmian stanu wifi 
 // Wypisuje trochę debugu i ustawia globalną flagę
 void wifiCb(void *response) {
+  Serial.print("Wywołanie wifiCb");
   ELClientResponse *res = (ELClientResponse*)response;
   if (res->argc() == 1) {
     uint8_t status;
@@ -38,8 +39,8 @@ void wifiCb(void *response) {
 
 //Definiuje zachowanie uC po otrzymaniu informacji, że wciśnięto 
 //przycisk
-void ledButtonPressCb(char * btnId) 
-{
+void ledButtonPressCb(char * btnId) {
+  Serial.print("wywołanie ledButtonPress");
   String id = btnId;
   if( id == F("btn_on") )
     digitalWrite(A2, LOW);
@@ -48,7 +49,10 @@ void ledButtonPressCb(char * btnId)
     digitalWrite(A2, HIGH);
 }
 
+
+
 void resetCb(void) {
+  Serial.print("wywołanie resetCb");
   Serial.println("EL-Client (re-)starting!");
   bool ok = false;
   do {
@@ -61,9 +65,11 @@ void resetCb(void) {
 }
 
 
+
 void setup() {
   Serial.begin(9600);   
   Serial.println("EL-Client starting!");
+  Serial.print("Wszedl w Setup");
 
 pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
@@ -86,6 +92,7 @@ digitalWrite(A2, HIGH);
 
 URLHandler *ledHandler = webServer.createURLHandler(F("/Sterowanie.html.json"));
 ledHandler->buttonCb.attach(&ledButtonPressCb);
+Serial.print("Wywołał urlhandler i ledhandler");
 
 esp.resetCb = resetCb;
 resetCb();
@@ -105,15 +112,15 @@ resetCb();
 #define BUFLEN 266
 
 void loop() {
-
+Serial.print("Rozpoczynam loop");
 // przetwarza wszystkie callbacki od esp-linka
 esp.Process();
-/*int x = digitalRead (A0);
+int x = digitalRead (A0);
 int y = digitalRead (A1); 
 Serial.print("Stan wejscia A0: ");
 Serial.println(x);
 Serial.print("Stan wejscia A1: ");
-Serial.println(y);*/
+Serial.println(y);
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A1) == HIGH && otwarte == false){
   if(wifiConnected) {
