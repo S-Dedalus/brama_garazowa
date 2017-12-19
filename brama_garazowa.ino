@@ -15,13 +15,12 @@ ELClientRest rest(&esp);
 //Uruchamia webserwer
 ELClientWebServer webServer(&esp);
 
-boolean _debugEn = false;
 boolean wifiConnected = false;
 boolean otwarte = false;
 
 // Callback od esp-linka, który pilnuje zmian stanu wifi 
 // Wypisuje trochę debugu i ustawia globalną flagę
-void wifiCb(void *response) {
+/*void wifiCb(void *response) {
   Serial.print("Wywołanie wifiCb");
   ELClientResponse *res = (ELClientResponse*)response;
   if (res->argc() == 1) {
@@ -37,7 +36,7 @@ void wifiCb(void *response) {
       wifiConnected = false;
     }
   }
-}
+}*/
 
 
 //Definiuje zachowanie uC po otrzymaniu informacji, że wciśnięto 
@@ -85,7 +84,7 @@ digitalWrite(A2, HIGH);
   //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
   //tuz po tym jak Sync() zakończy działanie. 
   
-  esp.wifiCb.attach(wifiCb); // callback zmian stanu wifi, opcjonalne (wywalić, jeśli niepotrzebne)
+//  esp.wifiCb.attach(wifiCb); // callback zmian stanu wifi, opcjonalne (wywalić, jeśli niepotrzebne)
   bool ok;
   do {
     ok = esp.Sync();      // synchronizuje esp-link, blokuje system na 2 sek.
