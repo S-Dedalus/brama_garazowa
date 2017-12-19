@@ -5,6 +5,8 @@
 
 //Nawiązuje połączenie z esp-link za pośrednictwem portu szeregowego dla protokołu SLIP 
 //i danych debugowaniw
+
+
 ELClient esp(&Serial, &Serial);
 
 // Uruchamianie klienta REST dla połączenia uC<->esp
@@ -13,6 +15,7 @@ ELClientRest rest(&esp);
 //Uruchamia webserwer
 ELClientWebServer webServer(&esp);
 
+boolean _debugEn = false;
 boolean wifiConnected = false;
 boolean otwarte = false;
 
@@ -30,7 +33,7 @@ void wifiCb(void *response) {
       wifiConnected = true;
     } else {
       Serial.print("WIFI NOT READY: ");
-      Serial.println(status);
+ //     Serial.println(status);
       wifiConnected = false;
     }
   }
@@ -103,7 +106,7 @@ resetCb();
   int err = rest.begin("192.168.1.54", 8080);
   if (err != 0) {
     Serial.print("REST begin failed: ");
-    Serial.println(err);
+ //   Serial.println(err);
     while(1) ;
   }
   Serial.println("EL-REST ready");
