@@ -9,6 +9,7 @@
 
 ELClient esp(&Serial, &Serial);
 
+
 // Uruchamianie klienta REST dla połączenia uC<->esp
 ELClientRest rest(&esp);
 
@@ -17,26 +18,9 @@ ELClientWebServer webServer(&esp);
 
 boolean wifiConnected = false;
 boolean otwarte = false;
-
-// Callback od esp-linka, który pilnuje zmian stanu wifi 
-// Wypisuje trochę debugu i ustawia globalną flagę
-/*void wifiCb(void *response) {
-  Serial.print("Wywołanie wifiCb");
-  ELClientResponse *res = (ELClientResponse*)response;
-  if (res->argc() == 1) {
-    uint8_t status;
-    res->popArg(&status, 1);
-
-    if(status == STATION_GOT_IP) {
-      Serial.println("WIFI CONNECTED");
-      wifiConnected = true;
-    } else {
-      Serial.print("WIFI NOT READY: ");
- //     Serial.println(status);
-      wifiConnected = false;
-    }
-  }
-}*/
+int deelay = 2000;
+unsigned long buttonMillis = 0;
+boolean buttonPress;
 
 
 //Definiuje zachowanie uC po otrzymaniu informacji, że wciśnięto 
@@ -46,12 +30,19 @@ void ledButtonPressCb(char * btnId) {
   String id = btnId;
   if( id == F("btn_on") )
     digitalWrite(A2, LOW);
+    buttonPress = true;
+    if (buttonPress == true){
+      Serial.print("guzik wcisniety");
+      if (millis() - buttonMillis >= deelay){
+        digitalWrite(A2, HIGH);
+        buttonPress = false;
+        Serial.print("guzik zwolniony");
+      }
+          }
     Serial.println("Wcisnieto przycisk zamykania/otwierania bramy");
     delay(1000);
-    digitalWrite(A2, HIGH);
+    
 }
-
-
 
 void resetCb(void) {
   Serial.print("wywołanie resetCb");
@@ -66,8 +57,6 @@ void resetCb(void) {
   webServer.setup();
 }
 
-
-
 void setup() {
   Serial.begin(9600);   
   Serial.println("EL-Client starting!");
@@ -77,8 +66,6 @@ pinMode(A0, INPUT_PULLUP); //krancowka otwarcia
 pinMode(A1, INPUT_PULLUP); //krancowka zamkniecia
 pinMode(A2, OUTPUT); //przekaznik zamykania/otwierania
 digitalWrite(A2, HIGH);
-
-
 
   //Synchronizuje z esp-link. Jest wymagana na początku każdego skeczu. Inicjalizuje 
   //callback'i do callbacku o zmianie statusu wifi. Callback jest wywoływany ze stanem początkowym
