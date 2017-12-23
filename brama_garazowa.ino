@@ -93,29 +93,29 @@ resetCb();
 #define BUFLEN 266
 
 void loop() {
-Serial.print("Rozpoczynam loop");
+//Serial.print("Rozpoczynam loop");
 // przetwarza wszystkie callbacki od esp-linka
 esp.Process();
     if (buttonPress == true){
-      Serial.print("guzik wcisniety");
+//      Serial.print("guzik wcisniety");
       if (millis() - buttonMillis >= deelay){
         digitalWrite(A2, HIGH);
         buttonPress = false;
-        Serial.print("guzik zwolniony");
+//        Serial.print("guzik zwolniony");
       }
           }
-int x = digitalRead (A0);
+/*int x = digitalRead (A0);
 int y = digitalRead (A1); 
 Serial.print("Stan wejscia A0: ");
 Serial.println(x);
 Serial.print("Stan wejscia A1: ");
-Serial.println(y);
+Serial.println(y);*/
 //sprawdzam krancowke od otwierania i zmieniam stan przelacznika w Domoticzu
 if (digitalRead(A1) == HIGH && otwarte == false){
   if(wifiConnected) {
     // Wysyłanie żądania do domoticza
     rest.get("/json.htm?type=command&param=switchlight&idx=29&switchcmd=On");
-    Serial.print("Wysłałem zapytanie json");
+    //Serial.print("Wysłałem zapytanie json");
     char response[BUFLEN];
     memset(response, 0, BUFLEN);
     uint16_t code = rest.waitResponse(response, BUFLEN);
