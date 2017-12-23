@@ -31,14 +31,6 @@ void ledButtonPressCb(char * btnId) {
   if( id == F("btn_on") )
     digitalWrite(A2, LOW);
     buttonPress = true;
-    if (buttonPress == true){
-      Serial.print("guzik wcisniety");
-      if (millis() - buttonMillis >= deelay){
-        digitalWrite(A2, HIGH);
-        buttonPress = false;
-        Serial.print("guzik zwolniony");
-      }
-          }
     Serial.println("Wcisnieto przycisk zamykania/otwierania bramy");
     delay(1000);
     
@@ -104,6 +96,14 @@ void loop() {
 Serial.print("Rozpoczynam loop");
 // przetwarza wszystkie callbacki od esp-linka
 esp.Process();
+    if (buttonPress == true){
+      Serial.print("guzik wcisniety");
+      if (millis() - buttonMillis >= deelay){
+        digitalWrite(A2, HIGH);
+        buttonPress = false;
+        Serial.print("guzik zwolniony");
+      }
+          }
 int x = digitalRead (A0);
 int y = digitalRead (A1); 
 Serial.print("Stan wejscia A0: ");
